@@ -1,0 +1,168 @@
+typeScript 
+    I. define type 
+        const name :  string;
+        !!! phải xác định kiểu như nhũng ngôn ngữ khác
+        const func : (a: string, b: number, c: boolean) => boolean = (a, b, c) => {
+            return true;
+        }     
+        If nothing to return we use 'void'
+    II. pass argument to func with interface
+        2.a
+        interface IseacrchBox extend ChangeHandleProps {
+            className : string;
+            placeholder?: string;// Use ' ? ' if placeholder can get null value;
+
+        }
+
+        interface ChangeHandleProps  {
+            onChangleHandle : (a : string) => void
+            
+        }
+
+        const SearchBox = ({className, placeholder, onChangleHandle} : IseacrchBox) =>(
+            <input className = {`searchBox ${className}}
+                onChange = {e => onChangleHandle(e)}
+            .... </input>       
+        )  
+
+        !!! pass prama, first thing you must define this type is a object 
+        that like IseacrchBox
+        
+        2.b
+
+        type SearchBox = {
+            className : string;
+            placeholder?: string;
+            onChangleHandle : (a : string) => void
+        }
+
+        type CanadianAddress = {
+            street : string;
+            province : string;
+        }
+
+        type USAddress = {
+            street : string;
+            state : string;
+        }
+         
+        type ItalianAddress = {
+            street :  string;
+            region : string;
+        }
+
+//they can union with type//  type NortAmerican = CanadianAddress | USAddress | ItalianAddress;
+
+        const Address : NortAmerican = {
+            street : 'adas';
+            province : 'adase';
+            /or you set 'state' properties of USAdrees in to items
+            region : 'addd';  /its work
+        }
+//golden rules : if you writing code style func, you should type
+else you writing type object oop you should use interface style
+
+    III. ts with eventHanlde
+
+        import { ChangeEventHandle } from 'react';
+
+        you shoul set type off when you use event func is a paramater
+        type SearchBoxProps = {
+            ...
+            onChangleHandle : ChangeEventHandle<HTMLInputElement>;
+        }                     //Like a <T> class, tell ts type element can be change
+        const SearchBox = ({className, placeholder, onChangleHandle} : IseacrchBox) =>(
+            <input className = {`searchBox ${className}}
+                onChange = {onChangleHandle}
+            .... 
+            </input>       
+        ) 
+
+       // Another way//
+        import {ChangeEvent} from 'react'; 
+        
+        type SearchBoxProps = {
+            ...
+            onChangleHandle : (ChangeEvent<HTMLInputElement>) => void;
+        } 
+    IV. generics function
+    
+        const getData = async <T>(url : string): Promise<T>  =>{
+            const response = await fetch(url);
+            return await response.json();
+        }
+
+        /in Another file/
+
+        import {getData} from '....';
+        import {ChangeEvent} from 'react'
+        
+        type Monster = {
+            id: string;
+            name :string;
+            email : string;
+        }
+
+        useEffect (() =>{
+            const fetchUsers = async () =>{
+                const user = await getData<Monster[]>('......');
+                setMonster(user);
+            }
+
+            fetchUsers();
+        }, [])
+    V. setState ts
+        // In that file //
+        const (monsters , setMonster) =  useState<Monster[]>([])
+        const (fieldString , setFieldString) =  useState('')
+        //object and Array, Number should be gernerics type
+        
+        Example : 
+        const onSearchChange = (event: ChangeEvent<HTMLInputElement>) : void =>{
+            const searchFieldString =  event.target.value.toLowerCase();
+            setSearchField(searchFieldString);
+        }
+    VI. Example
+
+        ex1:
+        import Monster from '....'
+
+        type CardProps = {
+            monsters : Monster;
+        }
+
+        const Card = ({monsters} : CardProps) =>{
+            return(
+                <div>.....</div>
+            )
+        }
+    VII. type  predicate function
+        Trong TypeScript, một type predicate function là một hàm có kiểu trả về là boolean,
+        được sử dụng để kiểm tra kiểu của một giá trị.
+        Type predicate function cho phép chúng ta kiểm tra xem một giá trị có thuộc một kiểu 
+        cụ thể hay không, và sau đó TypeScript sẽ sử dụng thông tin đó để 
+        cung cấp các kiểu thông minh (smart type checking) trong mã của chúng ta.
+        
+        function isType(variable: any): variable is Type {
+                // return true if variable is of Type, false otherwise
+        }
+    VIII. Itersection 
+        type Human = {
+            name : string;
+        }
+
+        type Alien = {
+            fly : () => void;
+        }
+
+        type Hybrid = Human & Alien 
+
+        const Josh : Hybrid  = {
+            name : 'john';
+            fly : () => {}
+        }
+    
+    IX. Return type 
+        
+        type myFunc = () => string;
+        type MyReturn = ReturnType<myFunc>
