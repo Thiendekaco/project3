@@ -5,14 +5,21 @@ import { addItemToCart } from '../../store/cart/cart.action';
 
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 
+
 import {
   ProductCartContainer,
   Footer,
   Name,
   Price,
 } from './product-card.styles';
+import { CartItem } from '../../store/cart/cart.types';
+import React from 'react';
 
-const ProductCard = ({ product }) => {
+export type ProducProp = {
+  product : CartItem
+}
+
+const ProductCard: React.FC<ProducProp> = ({ product }) => {
   const { name, price, imageUrl } = product;
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
